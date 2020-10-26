@@ -20,6 +20,8 @@ Keep in mind that these are community maintained and may not be up to date.
 
 [Deutsch](/de/introduction)
 
+[Español](/es/introduction)
+
 [Română](/ro/introduction)
 
 [Slovenský](/sk/introduction)
