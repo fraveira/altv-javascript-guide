@@ -1,6 +1,6 @@
 # Instalar Archivos del Servidor
 
-## Requisitos Previous
+## Requisitos Previos
 
 Antes de comenzar, asegúrate de instalar estos programas y servicios.
 

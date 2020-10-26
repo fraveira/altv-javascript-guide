@@ -1,36 +1,36 @@
-# Summary
+# Sumario
 
-alt:V is an alternative multiplayer framework for GTA:V and allows developers and players to player on custom servers. These servers can utilize languages such as C#, JavaScript, and Lua.
+alt:V es un framework muitijugador alternativo para GTA:V que permite a desarrolladores y jugadores crear y participar en servidores personalizados. Estos servidores pueden utilizar lenguajes de programación como C#, JavaScript, y Lua.
 
-This specific website will teach you how to work with alt:V in JavaScript by holding your hand and teach you how to properly setup a project and build out your very own gamemode.
+Esta web te mostrará cómo trabajar con alt:V en JavaScript llevándote de la mano por los procesos de puesta en marcah de nuevos proyectos hasta la creación de tu propio gamemode.
 
-✔️ Free To Use
+✔️ Gratuito
 
-✔️ Slot limit based on Hardware
+✔️ Límite de jugadores (slots) basado en Hardware.
 
-✔️ Play with Friends
+✔️ Juega con amigos
 
-✔️ Server Browser
+✔️ Navegador del servidor
 
-✔️ No ScriptHookV or .asi Injections
+✔️ No son necesarios ScriptHookV o .asi Injections
 
-✔️ Server and Clientside Boundary
+✔️ Frontera de server y cliente
 
-✔️ Encrypted Clientside Code
+✔️ Código en Clientside encriptado
 
-✔️ Built in Voice Service Up to 400+ Users
+✔️ Servicio de voz para hasta 400+ Usuarios incorporado.
 
-✔️ Mod Support
+✔️ Soporte de Mod
 
-✔️ Map Support
+✔️ Soporte de mapeado
 
-✔️ MLO Support
+✔️ Soporte de MLO
 
-Before you start scripting keep these points in mind.
+Antes de que empieces a desarrollar, por favor, ten esto en cuenta:
 
--   Development should be done entirely in **ENGLISH**.
--   Translating these pages may result in wrong function names, events, etc.
--   All pages are opinion based and use tools that may not be supported in the future.
--   You can always join the alt:V Discord for the latest information.
+-   El desarrollo debe de hacerse enteramente en **INGLÉS**.
+-   Traducir el código de estas páginas puede resultar en nombres de funciones, eventos, etc. erróneos.
+-   Todas las páginas aquí presentes se basan en opiniones personales y algunas de las herramientas mencionadas puede que no sean soportadas en el futuro.
+-   Siempre puedes pasarte por el Discord de alt:V para conseguir la información más actualizada.
 
-This site is provided as is and is not affiliated with the alt:V Development team. The content inside is manually created by Stuyk and acts as a reference to help you learn how to work with the alt:V GTA:V Framework.
+Esta web está se proporciona "tal cual" y no está afiliada con el equipo de desarrollo de alt:V. El contenido está creado personalmente por Stuyk y sirve como referencia para ayudarte a aprender cómo trabajar y desarrollar un Framework alt:V para el GTA:V.
