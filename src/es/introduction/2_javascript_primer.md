@@ -1,6 +1,6 @@
-# JavaScript Primer
+# JavaScript Básico
 
-This page is to explain some basic JavaScript principles. This is mainly for the people who refuse to look into a place like Code Academy to learn how to code. However, here are some courses.
+El objetivo de esta página es explicar algunos principios básicos de JavaScript. La hemos creado teniendo en mente a aquellas personas que necesitan un "Crash course". Os recomendamos estos cursos (en inglés). En general, hace falta saber un mínimo de inglés para programar, al igual que hace falta un mínimo de JavaScript para poder programar en alt:V:
 
 -   [https://learnxinyminutes.com/docs/javascript/](https://learnxinyminutes.com/docs/javascript/)
 -   [https://www.learn-js.org/](https://www.learn-js.org/)
@@ -8,16 +8,17 @@ This page is to explain some basic JavaScript principles. This is mainly for the
 
 ## Variables
 
-There are two types of variables you should be using in JavaScript these days.
+Hay dos tipos de variables que se usan habitualmente en el JavaScript que se escribe hoy en día.
+\*Nota del traductor, todos los ejemplos de código están escritos en inglés. Es recomendable que todo el desarrollo de un servidor en alt:V se haga dando nombres a las variables/funciones en inglés:
 
 ```js
 const myVariable = 'example';
 let myVariableName = 'example';
 ```
 
-**const** means the variable is constant. This means the variable type cannot change and the properties of the content can be re-assigned. Also must have a value.
+**const** significa que la variable es constante. Esto es, el tipo que representa la variable no puede cambiar, y las propiedades del contenido no pueden ser reasignadas, pero sí mutadas (alteradas). Requiere inicializarse con un valor.
 
-**let** is a type of variable that can have its value re-assigned. Meaning it can be reused over and over again. Value is optional.
+**let** es un tipo de variable cuyos valores pueden ser reasignados: puede ser reutilizada una y otra vez a lo largo del mismo ámbito (scope). Inicializar con un valor es opcional.
 
 ```js
 let myVariable;
@@ -28,40 +29,40 @@ myVariable = {
 };
 ```
 
-## Basic Math
+## Matemática básica
 
-Mathematics is mostly similar to other programming languages.
+Las operaciones matemáticas en JavaScript son similares a las de otros lenguajes de programación.
 
 ```js
 let result;
 
-// Addition
+// Suma
 result = 5 + 5;
 result += 1;
 console.log(result);
 
-// Subtraction
+// Resta
 result = 10 - 5;
 result -= 1;
 console.log(result);
 
-// Multiplication
+// Multiplicación
 result = 10 * 5;
 result *= 2;
 console.log(result);
 
-// Division
+// División
 result = 10 / 5;
 console.log(result);
 ```
 
-## Basic Functions
+## Funciones básicasBasic Functions
 
-Functions are special blocks of code that can be called from other blocks of code. They can also be exported and imported into other files and called. We’ll talk about imports just below this section.
+Las funciones son bloques especiales de código que pueden, a su vez, ser invocadas desde otros bloques de código. También pueden ser exportadas e importadas desde otros archivos (e invocadas). Hablaremos de las importaciones más abajo en esta sección.
 
-You can also write functions in a ton of different ways. I prefer traditional rather than the fat arrow functions.
+Puedes escribir funciones de un montón de maneras distintas. Preferimos el método tradicional a las funciones flecha.
 
-**Traditional Function Example**
+**Ejemplo de Función Tradicional**
 
 ```js
 function myFancyFunction(myArgument, myOtherArgument) {
@@ -69,7 +70,7 @@ function myFancyFunction(myArgument, myOtherArgument) {
     console.log(myOtherArgument);
 }
 
-myFancyFunction('hello', 'world');
+myFancyFunction('hola', 'mundo');
 
 function add(n1, n2) {
     return n1 + n2;
@@ -77,10 +78,10 @@ function add(n1, n2) {
 
 const result = add(5, 5);
 console.log(result);
-// Prints 5 as the result.
+// Como resultado, logea 10 en la consola.
 ```
 
-**Fat Arrow Functions**
+**Funciones flecha**
 
 ```js
 const myFancyFunction = (myArgument, myOtherArgument) => {
@@ -88,7 +89,7 @@ const myFancyFunction = (myArgument, myOtherArgument) => {
     console.log(myOtherArgument);
 };
 
-myFancyFunction('hello', 'world');
+myFancyFunction('hola', 'mundo');
 
 const add = (n1, n2) => {
     return n1 + n2;
@@ -96,14 +97,14 @@ const add = (n1, n2) => {
 
 const result = add(5, 5);
 console.log(result);
-// Prints 5 as the result.
+// Como resultado, logea 10 en la consola.
 ```
 
-## Exporting Functions
+## Exportando funciones
 
-Exporting is a big part of the process when working with alt:V. However, the exports are not common js. We use ES6 syntax for a majority of imports and exports. This is slightly different if you’re used to the whole module exports part of common js.
+Exportar es una parte fundamental del proceso de desarrollo en alt:V. Sin embargo, las exportaciones no son JavaScript común. Vamos a utilizar la síntaxis moderna que aparece tras la especificación ECMASCript 2015 (o ES6), Esta sintaxis es algo distinta de aquella que aparece en JavaScript anterior a 2015.
 
-Assume these files are in the same directory.
+Asumiendo que estos archivos se encuentran en el mismo directorio:
 
 **File 1 - file1.js**
 
@@ -129,13 +130,12 @@ import * as myFuncs = from './file1.js'
 myFuncs.myFunction('hello', 'world');
 ```
 
-Pretty simple to handle and we’ll be using these exported and imported functions all over the place when it comes down to creating a solid file structure.
+Es muy sencillo gestionar así las importaciones y exportaciones. Vamos a utilizar estas funciones de esta manera a lo largo de nuestro código, ya que cada módulo y funcionalidad de nuestro gamemode se encontrará físicamente en un archivo distinto.
 
-## For Loops
+## Bucles "for"
 
-Loops are used for so many different things in Javascript and should be used in every part of your toolkit to help you write less code. A for loop allows us to loop through a block of code multiple times. Which allows us to do different things with the results inside of an array.
-
-Keep in mind that arrays start at zero (0). This isn’t Lua. Meaning the first element in the array is always a zero.
+Los bucles se utilizan para un montón de objetivos distintos en JavaScript y deberían de ser parte fundamental de tu caja de herramientas como desarrollador para así escribir menos código. Un bucle "for" nos ayuda a iterar por un bloque de código múltiples veces. Esto nos permite, por ejemplo, ejecutar distintas acciones con los resultados dentro de una matriz (arreglo).
+Los arreglos empiezan en 0, no como en el lenguaje de programación Lua. Así, el primer elemento de un arreglo se encuentra en posición 0.
 
 ```js
 const data = ['test0', 'test1', 'test2'];
@@ -144,11 +144,10 @@ function saySomething(msg) {
     console.log(msg);
 }
 
-// is a number in this for loop
-// i++ increments the number by 1
+// i++ incrementa el número por uno en cada iteración
 for (let i = 0; i < data.length; i++) {
     saySomething(data[i]);
 }
 ```
 
-The above code will print for the above array 3 times. It will first print ‘test0’, ‘test1’, and then ‘test2’. This is done by passing the data inside of the array based on the element number which is i.
+El código superior logeará 3 veces. La primera,‘test0’; la segunda, ‘test1’, y por último, ‘test2’. Esto se consigue pasando los datos contenidos por este arreglo basado en el número de elementos (que es data.length) a lo largo de la cantidad de número total de elementos disponibles en el conjunto (índice numérico, o 2, equivalente a 3 elementos).
