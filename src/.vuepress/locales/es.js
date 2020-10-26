@@ -4,10 +4,10 @@ const language = 'es'; // ie. /tr/
 const languageUpper = 'ES';
 const languageName = 'Spanish'; // Turkish
 
-const enLocale = {
+const esLocale = {
     [`/${language}/`]: {
         lang: `${language}-${languageUpper}`,
-        title: `Documentation | ${languageName}`
+        title: `Documentación | ${languageName}`
     }
 };
 
@@ -66,7 +66,7 @@ const sidebar = [
 ];
 
 // change this to first two letters + menus. ie. trMenus
-const enMenus = {
+const esMenus = {
     [`/${language}/`]: {
         label: languageName,
         nav: [...defaultNavbar],
@@ -79,6 +79,6 @@ const enMenus = {
 };
 
 module.exports = {
-    enLocale,
-    enMenus
+    esLocale,
+    esMenus
 };

@@ -6,6 +6,7 @@ const { roLocale, roMenus } = require('./locales/ro');
 const { skLocale, skMenus } = require('./locales/sk');
 const { trLocale, trMenus } = require('./locales/tr');
 const { deLocale, deMenus } = require('./locales/de');
+const { esLocale, esMenus } = require('./locales/es');
 const { defaultSEO } = require('./seo/default');
 
 const title = 'Unofficial alt:V Documentation';
@@ -56,7 +57,8 @@ module.exports = {
         ...roLocale,
         ...skLocale,
         ...trLocale,
-        ...deLocale
+        ...deLocale,
+        ...esLocale
     },
     head: meta,
     themeConfig: {
@@ -72,7 +74,8 @@ module.exports = {
             ...roMenus,
             ...skMenus,
             ...trMenus,
-            ...deMenus
+            ...deMenus,
+            ...esMenus
         },
         nav: [...defaultNavbar]
     },
