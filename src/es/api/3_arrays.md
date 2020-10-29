@@ -1,73 +1,73 @@
-# Get All Players & Vehicles
+# Obteniendo todos los Jugadores y Vehículos
 
-There are two special arrays that exist on server-side that help you with determine all players or vehicles.
+Hay dos colecciones (arrays) que existen en el lado del servidor y que te pueden ayudar a determinar todos los jugadores o vehículos.
 
 ## alt.Player.all
 
-This array specifically returns a list of all players that are currently on your server.
+Esta array retorna un listado de todos los jugadores que ser encuentran actualmente en tu servidor.
 
-There are a few things you should keep in mind when using arrays like this.
+Pero ten en cuenta algunas cosas cuando utilices arrays como esta.
 
-1. Always clone your array. It will save you from undefined or invalid issues.
+1. Siempre clona tu array. Te ayudará a evitar problemas del tipo undefined o invalid.
 
 ```js
 const currentPlayers = [...alt.Player.all];
 ```
 
-2. When looping through your players. Validate them.
+2. Cuando iteres sobre tus jugadores, valídalos.
 
 ```js
 const currentPlayers = [...alt.Player.all];
 
-// Loop through players.
+// Iterando sobre jugadores.
 for (let i = 0; i < currentPlayers.length; i++) {
     const aPlayer = currentPlayers[i];
 
-    // We check validity by checking if 'aPlayer.valid' is true.
+    // Comprobamos su validez revisando si 'aPlayer.valid' es true.
     if (!aPlayer || !aPlayer.valid) {
         continue;
     }
 
-    // Do other stuff.
+    // Haz otras cosas
 }
 
-// Another way to loop through players.
+// Otra manera de iterar sobre jugadores.
 currentPlayers.forEach((player, index) => {
-    // We are checking validity here once again.
+    // Comprobamos su validez aquí
     if (!player || !player.valid) {
         return;
     }
 
-    // Do other stuff.
+    // Haz otras cosas
 });
 ```
 
 ## alt.Vehicle.all
 
-Make sure you've read above. The same process and validity checks apply for vehicles.
+Asegúrate de haber leído la sección superior porque el mismo proceso sirve para los vehículos.
 
 ```js
 const currentVehicles = [...alt.Vehicle.all];
 
-// Loop through vehicles.
+// Itera sobre vehículos
 for (let i = 0; i < currentVehicles.length; i++) {
     const aVehicle = currentVehicles[i];
 
-    // We check validity by checking if 'aVehicle.valid' is true.
+    // Comprobamos su validez revisando si 'aVehicle.valid' es true.
     if (!aVehicle || !aVehicle.valid) {
         continue;
     }
 
-    // Do other stuff.
+    // Haz otras cosas
 }
 
-// Another way to loop through vehicles.
+// Otra manera de iterar sobre vehículos.
 currentVehicles.forEach((vehicle, index) => {
-    // We are checking validity here once again.
+    // Comprobamos su validez aquí
     if (!vehicle || !vehicle.valid) {
         return;
     }
 
-    // Do other stuff.
+    // Haz otras cosas
 });
 ```

@@ -1,27 +1,26 @@
-# Classes
+# Clases
 
+La mayoría de clases en JavaScript requieren el operador `new` antes de construirse.
 
-Most classes in JavaScript require `new` before constructing them.
-
-Here's the constructor for the `alt.Vehicle` class.
+Aquí un ejemplo del constructor para la clase `alt.Vehicle`.
 
 ```ts
 new Vehicle(model: string | number, x: number, y: number, z: number, rx: number, ry: number, rz: number): Vehicle
 ```
 
-As you can see based on what we've read above it takes multiple parameters.
+Como puedes observar leyendo el constructor, toma múltiples parámetros.
 
-We can use that knowledge to spawn a vehicle.
+Sabiendo esto, puedes ahora spawnear un vehículo.
 
 ```js
-// Create the vehicle.
-// The 'vehicle' variable is an instance of our Vehicle.
+// Crear un vehículo.
+// La variable 'vehículo' es ahora una instancia de nuestro Vehículo.
 const vehicle = new alt.Vehicle('infernus', 0, 0, 0, 0, 0, 0);
 
-// Set the vehicle's engine on. 
+// Enciende el motor del vehículo.
 vehicle.engineOn = true;
 
-// Adjust the primary color of the vehicle to red.
+// Ajusta el color primario del vehículo a rojo.
 vehicle.customPrimaryColor = {
     r: 255,
     g: 0,
