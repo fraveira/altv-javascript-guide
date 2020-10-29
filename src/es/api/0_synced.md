@@ -1,34 +1,34 @@
-# What is Synchronized
+# Qué está sincronizado
 
-alt:V has a lot of things that are automatically synchronized.
+alt:V contiene un montón de cosas que están automáticamente sincronizadas.
 
-It takes a lot of the pain out of developing a server when things already work outright.
+Esto hace que el esfuerzo a la hora de desarrollar un servidor sea menor, ya que las cosas funcionan desde el principio.
 
-Here is an unofficial list of things that may be synchronized.
+Aquí ofrecemos un listado (no oficial) de elementos que pueden ser sincronizados.
 
--   Player/Ped Clothing
--   Player/Ped Appearance
--   Player/Ped Animations
--   Player/Ped Tasks
--   Player/Ped Driving Tasks
--   Players on Ladders
--   Players Shooting
--   Players Fist Fighting
--   Players Rolling
--   Players Crouching (Have to change stance.)
--   Players Crawling (Have to change stance.)
--   Vehicle Damage
--   Vehicle Mods
--   Vehicle Colors
--   Vehicle Movement
--   Vehicle Crashing
--   Objects from Tasks
--   Swimming
--   Diving
--   Waves (Weather Dependent)
--   Wind Turbines
--   Street Lights
--   Moving Stunt Props
--   Anything that uses Network Time
+-   Vestimenta de los jugadores/Peds
+-   Apariencia de los jugadores/Peds
+-   Animaciones de los jugadores/Peds.
+-   Tareas de los jugadores/Peds.
+-   Tareas de conducción de los jugadores/Peds.
+-   Jugadores en escaleras
+-   Jugadores disparando
+-   Jugadores peleando con puños.
+-   Jugadores dando volteretas.
+-   Jugadores agachados (se ha de cambiar de postura)
+-   Jugadores gateando (se ha de cambiar de postura)
+-   Daños en vehículos
+-   Mods de vehículos.
+-   Colores de vehículos.
+-   Movimiento de vehículos.
+-   Colisiones de vehículos
+-   Objetos de tareas
+-   Natación
+-   Buceo
+-   Olas (Dependen del tiempo)
+-   Molinos de viento
+-   Luces de la ciudad
+-   Accesorios de acrobacias en movimiento
+-   O cualquier cosas que utilice tiempo de red
 
-This synchronization can be confirmed with upwards of 600+ players.
+Esta sincronización es posible con hasta más de 600 jugadores.

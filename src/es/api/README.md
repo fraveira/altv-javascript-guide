@@ -1,47 +1,47 @@
-# Introduction to API
+# Introducción a la API
 
-The API is where you can get a majority of information regarding the functionality and writing code for alt:V.
+La API es donde puedes encontrar la mayoría de la información relativa a las funcionalidades de alt:V que te permitirá escribir código.
 
-The only caveat is that there are few examples on using most of the functions.
+Lo único que cabe considerar es que hay pocos ejemplos que muestran cómo usar estas funcionalidades.
 
 -   [https://altmp.github.io/altv-typings/](https://altmp.github.io/altv-typings/)
 
-## Navigating the API
+## Navegando por la API
 
-When you are reading the API there are two sections. **(Click the above link)**
+Cuando leas la API, te encontrarás con dos secciones **(Haz clic en el link que aparece arriba)**
 
 -   alt-server
 
-    -   Referring to all functionality available on the server-side.
+    -   Aquí se refieren todas las funcionalidades relativas al server-side (lado del servidor).
 
 -   alt-client
 
-    -   Referring to all functionality available on the client-side.
+    -   Se refiere a aquellas funcionalidades disponibles en el client-side (lado del cliente).
 
-    -   Often uses natives / game functionality.
+    -   Habitualmente se utilizan "natives" / funcionalidad del propio juego.
 
-    -   Only affects a player's client.
+    -   Solo afecta al cliente del jugador.
 
-## Reading the API
+## Leyendo la API
 
-When you are looking at the API all parameters and their types are defined for functions and classes.
+En la API, todos los parámetros y sus tipos se encuentran definidos en funcionesl y clases.
 
-Here's an example looking at the `alt.on` function.
+Aquí podéis ver un ejemplo de la función `alt.on`.
 
 ```ts
 on(eventName: "playerConnect", listener: (player: Player) => void): void
 ```
 
-Reading this may be a little confusing at first if you don't know how to read APIs.
+Al principio, observar este código puede resultar algo confuso si no estáis habituados a leer APIs.
 
--   The event name is called `on`
--   The first parameter is `playerConnect`
--   The second parameter is a listener or a callback function. It passes a `alt.Player` type.
-    -   You can click on Player to see what properties it offers.
-    -   Some of these properties are `name`, `ip`, etc.
--   `:void` means that this returns nothing.
+-   El nombre del evento se llama `on`
+-   El primer parámetro es `playerConnect`
+-   Mientras que el segundo parámetro es un "oyente" o una función de retrollamada (callback). Pasa el tipo `alt.Player`.
+    -   Puedes hacer clic (o colocar el cursos encima) para ver qué tipo de propiedades están disponibles.
+    -   Algunas de estas propiedades son `name`, `ip`, etc.
+-   `:void` significa que no se espera que la función retorne ningún valor.
 
-Here is that same function in full use.
+Aquí podéis ver la misma función siendo utilizada.
 
 ```js
 alt.on('playerConnect', handlePlayerConnect);
@@ -51,19 +51,19 @@ function handlePlayerConnect(player) {
 }
 ```
 
-## Using the API
+## Usando la API
 
-You generally have a few different types of variables, functions, classes, etc.
+Generalmente te vas a encontrar con distintos tipos de variables, funciones, clases, etc.
 
-Let's talk about what each of those means and what they look like in code.
+Hablemos de qué significa cada una de ellas y cómo son representadas en el código.
 
-### Functions
+### Funciones
 
-Functions always work like functions (duh) and the API usually has a section for them.
+Las funciones se comportan como funciones al uso y la API tiene una sección para ellas.
 
 ![](../../img/functions.png)
 
-Here is an example of what using one of the functions above may look like.
+Este es un ejemplo de cómo usar una de las funciones que aparecen más arriba.
 
 ```js
 alt.setTimeout(() => {
@@ -71,17 +71,16 @@ alt.setTimeout(() => {
 }, 5000);
 ```
 
-### Classes
+### Clases
 
-Classes work like normal JavaScript classes. It's just dependent on how you import your `alt-server` or `alt-client`.
+Las clases funcionan como clases normales en JavaScript. Solo dependen de cómo hayas importado tus `alt-server` y `alt-client`.
 
-Let's assume you have `alt` as the prefix for everything.
+Asumamos que utilizas `alt` como el prefijo para todo lo relacionado con alt:V.
 
 ![](../../img/classes.png)
 
-Keep in mind that not all classes are accessible or can be created.
-
-Here is an example of what using one of the classes above may look like.
+Ten en cuenta que no todas las clases son accesibles o pueden ser creadas.
+Aquí mostramos un ejemplo del uso de una de esas clases.
 
 ```js
 const pos = new alt.Vector3(0, 0, 0);
@@ -89,13 +88,13 @@ const vehicle = new alt.Vehicle('infernus', pos.x, pos.y, pos.z, 0, 0, 0);
 const shape = new alt.ColshapeCylinder(pos.x, pos.y, pos.z, 5, 10);
 ```
 
-### Properties
+### Propiedades
 
-A property will usually exist inside of a class. They're accessible **without** parenthesis.
+Las propiedades generalmente existen dentro de clases. Se puede acceder a ellas **sin** el uso de paréntesis.
 
-They are also readable, so you don't always have to set them.
+Las propiedades pueden ser leídas, no siempre hace falta establecerlas.
 
-Here's an example using a car.
+He aquí un ejemplo con un vehículo.
 
 ```js
 const vehicle = new alt.Vehicle('infernus', 0, 0, 0, 0, 0, 0);
@@ -105,9 +104,9 @@ if (vehicle.engineOn === false) {
 }
 ```
 
-### Methods
+### Métodos
 
-A method will usually exist inside of a class. They're accessible with parenthesis.
+A su vez, los métodos existen generalmente dentro de clases. Se puede acceder a los mismos con paréntesis.
 
 ```js
 const vehicle = new alt.Vehicle('infernus', 0, 0, 0, 0, 0, 0);
