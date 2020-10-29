@@ -86,7 +86,7 @@ alt.on('hello', msg => {
 });
 ```
 
-## Client to WebView and Back
+## Cliente a WebView y viceversa
 
 **Nota:** Con recursos en la dirección HTTP nos referimos al recurso en el cual estás actualmente escribiendo tu código.
 
