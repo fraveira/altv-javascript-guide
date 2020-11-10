@@ -1,20 +1,21 @@
-# Single Resource vs Multi
+# Recurso Único vs Múltiple
 
-Dependent on what direction you want to take your project you may be asking yourself if you should go with a single resource or multiple resources that can be toggled on and off. 
+Dependiendo en la dirección que quieras llevar a tu proyecto puede ser interesante preguntarse si deberías de utilizar un recurso único o múltiples recursos que puedan ser encendidos y apagados a voluntad.
 
-It's good to keep in mind that additional resources will receive their own thread.
+Es preciso mencionar que los recursos adicionales recibirán su propio thread (hilo).
 
-Let's first look at some of the limitations of a multi-resource setup.
+Veamos primero algunas de las limitaciones de utilizar recursos múltiples.
 
-## Multi Resource Limitations
+## Limitaciones de Recursos Múltiples
 
-A limitation will be defined as what may cause a headache or a nuisance when building out your game mode.
+Una limitación se definirá como aquello que puede causar problemas o inconvenientes al crear tu gamemode.
 
-### Prototypes Are Not Shared
+### Los prototipos no se comparten
 
-If you enjoy extending the functionality of individual classes to add new functionality then a Multi Resource system is not going to help you very much. Let's talk about why that is.
+Si disfrutas extendiendo la funcionalidad de clases individuales y añadiendo nuevas funcionalidades, entonces un sistema de Recursos múltiples no te va a ayudar mucho.
+Hablemos del porqué.
 
-Assume you have this prototype.
+Si tienes un prototipo como el siguiente.
 
 ```js
 alt.Player.local.addMoney = function addMoney(amount) {
@@ -22,87 +23,86 @@ alt.Player.local.addMoney = function addMoney(amount) {
         return false;
     }
 
-	if (!this.money) {
+    if (!this.money) {
         this.money = amount;
     } else {
         this.money += amount;
     }
-    
+
     return true;
-}
+};
 ```
 
-You will now only have access to the `addMoney` function in the resource that it is written in. 
+Ahora tendrás solo acceso a la functión `addMoney` dentro del recurso en el que está escrita.
 
-There is no way for you to port this function to another resource and that is because variables are also no shared between resources.
+No es posible portar esta función a otro recurso debido a que las variables no se comparten entre distintos recursos. There is no way for you to port this function to another resource and that is because variables are also no shared between resources.
 
-### Custom Properties Are Not Shared
+### Las propiedades personalizadas no se comparten
 
-Ever wonder why `setMeta` and `getMeta` exist? This is why.
+¿Te preguntas por qué `setMeta` y `getMeta` existen? Este es el porqué.
 
-With the function above we can add money to the player but what if we want to get it in another resource?
+Con la función de más arriba podemos añadir dinero al jugador. Pero, ¿y si queremos usarla en otro recurso?
 
-Let's take a look at what your code might look like now.
+Echemos un vistazo a cómo sería el código.
 
 ```js
-// Exporting this function because we can import it into other resources.
+// Usamos "export" porque queremos importarla dentro de otros recursos.
 export function addMoney(amount) {
     if (isNaN(amount)) {
         return false;
     }
-	
+
     if (!this.hasMeta('money')) {
         this.setMeta('money', amount);
     } else {
         let currentAmount = this.getMeta('money');
         currentAmount += amount;
-    	this.setMeta('money', currentAmount);
+        this.setMeta('money', currentAmount);
     }
 }
 
-// Exporting this function because we can import it into other resources.
+// Usamos "export" porque queremos importarla dentro de otros recursos.
 export function getMoney(amount) {
     if (!this.hasMeta('money')) {
         return 0;
     }
-    
+
     return this.getMeta('money');
 }
 ```
 
-As you can see we've created two new functions that can be imported into any other resource as long as this resource is set as a dependency for the resource where we want to add and get money.
+Como ves, hemos creado dos nuevas funciones que pueden ser importadas dentro de cualquier otro recurso, siempre y cuando este recurso esté asignado como dependencia del recurso donde queremos añadir/obtener dinero.
 
-This is all fine and dandy but the only benefit of this would be the threads that are integrated at a lower level in C++.
+Todo esto está muy bien, pero el único beneficio de hacerlo sería para los subprocesos integrados en C++.
 
-Why bother with splitting all of this up and adding more headache to your project when you can do it all in a single resource (Not a single file. That's actually a horrible idea. This is not SAMP)
+¿Por qué molestarse en dividir todo esto añadiendo mayor dificultad a tu proyecto cuando puedes hacerlo todo en un recurso individual? (Y no hablamos de un archivo individual. Eso es una idea desafortunada. No estamos en SAMP)
 
-## Single Resource Limitations
+## Limitaciones de Recurso Único
 
-Obviously the biggest thing you're going to miss when going with a single resource is the threads. However, most people making resources are likely not going to need them. This includes those of you who are writing roleplay game modes and want to pursue 'best practices'.
+Obviamente, lo que más vas a echar en falta al utilizar recurso único son los subprocesos. Sin embargo, la mayor parte de las personas que crean recursos no los van a necesitar. Esto incluye a aquellos de vosotros que queréis escribir gamemodes de juegos de rol y buscáis seguir 'buenas prácticas' de programación.
 
-### Loss of State
+### Pérdida de estado
 
-When you restart a single resource. You lose the state of the resource that is storing state inside of it.
+Cuando reinicias un recurso único, pierdes el estado del recurso que guarda su estado dentro de sí.
+Esto quiere decir que para restablecer el estado, tienes que reconectarte.
 
-Meaning that you will need to reconnect to re-stablish your state.
+Un ejemplo sería `player.money`, si fuese 500 antes de reiniciar un recurso.
 
-An example would be `player.money` being 500 prior to restarting a resource.
+Entonces, `player.money` sería 0 después de reiniciar el recurso ya que no volviste a generar el estado de tu jugador otra vez.
 
-Then `player.money` being 0 after restarting the resource because you did not setup your player state again.
+### Mantenimiento de la Estructura de Archivos.
 
-### File Structure Maintenance
+Si estás creando un gamemode muy grande, vas a tener un recurso muy grande. Lo que significa que si no tienes una buena estructura de carpetas, te vas a encontrar con dificultades para mantener todo tu código organizado. Esta es una de las principales razones por las que la gente opta por un sistema de Recurso Múltiple.
 
-If you are building a very large game mode you are going to have a very large resource. Which means that if you do not have a very good folder structure you may find yourself struggling to keep all of your code organized. This is one of the major reasons why people will opt-in for a multi-resource system.
+Una de mis estructuras favoritas es como la que os muestro a continuación:
 
-I've found that one of my favorite folder structures is as follows.
-
-#### Client Folder Structure
+#### Estructura de Carpetas del Cliente.
 
 ```sh
-├───anticheat 				# A folder for anticheat related systems.
-├───events				    # A folder for handling client-side events only.
-├───gamedata			    # A folder for object data related to the game.
-├───html				    # A folder for all HTML/VUE interfaces.
+├───anticheat 				# Carpeta para sistemas relacionados con anticheat.
+├───events				    # Carpeta para manejar eventos del lado del cliente
+├───gamedata			    # Carpeta para datos de objetos relativos al juego.
+├───html				    # Carpeta para todas las interfaces HTML/VUE/etc
 │   ├───atm
 │   ├───charactereditor
 │   ├───characterselect
@@ -111,44 +111,43 @@ I've found that one of my favorite folder structures is as follows.
 │   ├───help
 │   ├───inventory
 │   ├───login
-├───systems					# A folder of files with corresponding functionality on server-side.
-│   ├───inventorySystem.js	 	# Handles general inventory functionality.
-│   └───vehicleSystem.js		# Handles general vehicle functionality. ie. setIntoVehicle
-├───utility					# Math Functions and Such
-└───views					# Where you call all your WebView creation and removal.
-    ├───atm.js				# Handles working with ATM's on client-side.
-    └───chat.js				# Handles working with chat on client-side.
+├───systems					# Carpeta con los archivos que tienen funcionalidad correspondiente en el lado del servidor.
+│   ├───inventorySystem.js	 	# Encargado de funcionalidad del inventario.
+│   └───vehicleSystem.js		# Encargado de funcionalidad de vehículos general. Por ejemplo, setIntoVehicle
+├───utility					# Funciones matemáticas o por el estilo.
+└───views					# Aquí es donde llamas a la creación/eliminación de tu WebView
+    ├───atm.js				# Encargado del funcionamiento de cajeros automáticos en el lado del cliente.
+    └───chat.js				# Encargado del funcionamiento del chat en el lado del cliente.
 ```
 
-Keep in mind that individual folders can expand into more folders.
+Ten en cuenta que carpetas individuales se pueden ampliar a más carpetas.
 
-However, the trick with this folder structure is to keep a similar file name on the server-side so you know which files corresponds with which system.
+Sin embargo, el truco de esta estructura de carpetas es mantener el mismo nombre del archivo en el lado del cliente, para así saber qué archivo se corresponde con qué sistema.
 
-#### Server Folder Structure
+#### Estructura de Carpetas del Servidor.
 
 ```sh
-├───commands				# Different command handlers.
-│   ├───cmdPlayer.js 			# Commands for players specifically.
-│   └───cmdVehicle.js			# Commands for vehicles specifically.
-├───configuration			# Anything configuration related. Spawn points, presets, etc.
-├───events				    # Used to handle server-side events only.
-├───extensions				# Prototypes for different alt:V API classes.
+├───commands				# Manipulación de comandos.
+│   ├───cmdPlayer.js 			# Comandos específicos para jugadores.
+│   └───cmdVehicle.js			# Comandos específicos para vehículos.
+├───configuration			# Todo aquello relativo a configuración: puntos de spawneo, preconfiguraciones, etc.
+├───events				    # Utilizado para controlar eventos exclusivos del lado del cliente.
+├───extensions				# Prototipos para distintas clases de la API de alt:V.
 │   ├───player.js
 │   ├───vehicle.js
 │   └───colshape.js
 ├───gamedata
-├───systems					# A folder of files with corresponding clones on client-side.
-│   ├───inventorySystem.js	 	 # Handles general inventory functionality.
-│   └───vehicleSystem.js		 # Handles general vehicle functionality. ie. setIntoVehicle
-├───utility					# Math Functions and Such
-└───views					# Corresponding folder that handles view functionality on server-side.
-    ├───atm.js				# Handles working with ATM's on server-side.
-    └───chat.js 			# A server side chat handler for routing messages.
+├───systems					# Carpeta de archivos con sus correspondientes correlatos en el lado del cliente.
+│   ├───inventorySystem.js	 	 # Encargado de funcionalidad del inventario.
+│   └───vehicleSystem.js		 # Encargado de funcionalidad de vehículos general. Por ejemplo, setIntoVehicle
+├───utility					# Funciones matemáticas o por el estilo.
+└───views					# Carpeta correlativa que se encarga de la funcionalidad "view" en el lado del cliente.
+    ├───atm.js				# Encargado del funcionamiento de cajeros automáticos en el lado del servidor.
+    └───chat.js 			# Encargado de enrutar mensajes (en el lado del cliente).
 ```
 
-## An Opinion
+## Una opinión
 
-I believe that the added functionality of Prototypes greatly outweighs all of the downsides a single resource may have. With a good folder system and a good understanding of your code base it's very easy to work with a single resource as long as you split up your files into individual systems with corresponding names on both client and server side.
+Creo que la funcionalidad añadida de los Prototipos tiene más peso que las desventajas de que un Recurso Único pueda propiciar. Con un buen sistema de carpetas y un buen conocimiento de tu código, es muy fácil trabajar con recurso único, siempre y cuando dividas tus archivos en sistemas individuales con sus correspondientes nombres, tanto en el lado del cliente comoe en el lado del servidor.
 
-Most developers working with JavaScript on alt:V often opt out of using multi-resource solely because of this reason.
-
+La mayoría de desarrolladores que utilizan JavaScript en alt:V deciden no utilizar recurso múltiple solo por este motivo.
