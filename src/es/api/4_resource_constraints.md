@@ -35,7 +35,7 @@ alt.Player.local.addMoney = function addMoney(amount) {
 
 Ahora tendrás solo acceso a la functión `addMoney` dentro del recurso en el que está escrita.
 
-No es posible portar esta función a otro recurso debido a que las variables no se comparten entre distintos recursos. There is no way for you to port this function to another resource and that is because variables are also no shared between resources.
+No es posible portar esta función a otro recurso debido a que las variables no se comparten entre distintos recursos.
 
 ### Las propiedades personalizadas no se comparten
 

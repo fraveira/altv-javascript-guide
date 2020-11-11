@@ -1,39 +1,39 @@
-# Event Usage Guide
+# Guía de usos de Eventos
 
-Now that we've given a brief overview of events. Let's talk about how to read the API.
+Ahora que hemos dado una pequeña visión del conjunto de eventos, hablemos sobre cómo leer la API.
 
-_If these links are ever out of date. Notify Stuyk._
+_Si estos links están desactualizados, notificad a Stuyk._
 
--   [Server API](https://altmp.github.io/altv-typings/modules/_alt_server_.html#on)
--   [Client API](https://altmp.github.io/altv-typings/modules/_alt_client_.html#on)
+-   [API del Servidor](https://altmp.github.io/altv-typings/modules/_alt_server_.html#on)
+-   [API del cliente](https://altmp.github.io/altv-typings/modules/_alt_client_.html#on)
 
-Below is some common use cases for events. Just some general code regarding how to use them.
+Abajo podemos ver usos comunes de los eventos. Podéis encontrar algunos ejemplos de código para usarlos.
 
-[Refer to Server Event Examples for Syntax and Parameters](./server_events)
+[Consula ejemplos de Eventos del Servidor para ver más sobre Sintáxis y Parámetros](./server_events)
 
-## playerConnect  Server Side Sample Events
+## Ejemplos de eventos en el lado del servidor
 
-This event is the entry point for any player who is joining your server. You should be using this event once in your entire resource. It listens for player connections. You can even kick a player before they fully connect.
+Este evento es el punto de entrada para cualquier jugador que se conecta en tu servidor. Deberías de utilizar este evento solo una vez en todo tu recurso. Escucha conexiones de jugadores. Puedes incluso kickear (echar) del servidor a un jugador antes de conectarse por completo. ck a player before they fully connect.
 
-**Server Side**
+**Lado del servidor**
 
 ```js
-// An event to handle when a player connects.
+// Un evento para controlar cuando un jugador se conecta.
 alt.on('playerConnect', handlePlayerConnect);
 
-// Uses the class alt.Player
+// Utiliza la clase alt.Player
 function handlePlayerConnect(player) {
     alt.log(`${player.name} has connected.`);
 }
 ```
 
-It's important to understand that **NOTHING HAPPENS** after a player connects.
+Es importante entender que **NO OCURRE NADA** después de que un jugador se conecta.
 
-No player can move. No model is set for the player.
+El jugador no puede moverse, no tiene ningún modelo predeterminado.
 
-Here is how you set a player model and spawn the player.
+Aquí es como puedes dar un modelo al jugador y hacerlo aparecer en el servidor (spawn).
 
-**Server Side**
+**Lado del servidor**
 
 ```js
 /// <reference types="@altv/types-server" />
@@ -53,15 +53,15 @@ function handlePlayerConnect(player) {
 }
 ```
 
-## connectionComplete Client Side Sample
+## Ejemplo del Lado del Cliente de connectionComplete
 
-The alternative to the `playerConnect` event is the `connectionComplete` event from client-side. This is when a player is fully connected to the server.
+La alternativa para el evento `playerConnect` es el evento `connectionComplete` del lado del cliente. Esto se dispara cuando un jugador está totalmente conectado a un servidor.
 
-This event is client-side and we already know who the player is. This is only happening on their computer and is instance based.
+Este evento es del lado del cliente y ya sabemos quién es el jugador. Esto solo ocurre en su ordenador y está basado en instancia.
 
-Which means this function is ran for every player but only for the player that connected.
+Esto quiere decir que la función se ejecuta para todos los jugadores, pero solo para el jugador que se conectó.
 
-**Client Side**
+**Lado del Cliente**
 
 ```js
 alt.on('connectionComplete', handleConnectionComplete);
@@ -74,7 +74,7 @@ function handleConnectionComplete() {
 }
 ```
 
-**Server Side**
+**Lado del Servidor**
 
 ```js
 alt.onClient('helloFromClient', handleHelloFromClient);
