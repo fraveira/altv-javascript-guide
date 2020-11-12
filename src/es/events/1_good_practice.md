@@ -1,14 +1,14 @@
-# Good Practices for Events
+# Buenas Prácticas con Eventos
 
-There are a lot of ways to use events and the most common problem seen is initializing events inside of events.
+Hay un montón de maneras con las que usar eventos, y el problema más común sucede al inicializar eventos dentro de eventos.
 
-## Initializing Events in Events
+## Inicializando Eventos dentro de Eventos
 
-If you are one of those people who is initializing an event in an event. More often than not you're creating a memory leak.
+Si eres de aquellas personas que está inicializando un evento dentro de un evento, más pronto que tarde vas a crear una pérdida de memoria en tu aplicación.
 
-### Generic Server Events Example
+### Ejemplo genérico de Eventos del Servidor.
 
-**DO NOT DO THIS** ⚠️
+**NO HAGAS ESTO** ⚠️
 
 ```js
 alt.on('playerConnect', handleConnection);
@@ -18,13 +18,13 @@ function handleConnection(player) {
         player.health = 200;
     });
 
-    alt.emit('doSomething', player); // <--- This is a problem.
+    alt.emit('doSomething', player); // <--- Esto es un problema
 }
 ```
 
-What you should be doing instead is initializing your events in this way.
+Lo que deberías de hacer es inicializar los eventos de esta manera.
 
-**BETTER** ✔️
+**MEJOR HAZ ESTO** ✔️
 
 ```js
 alt.on('playerConnect', handleConnection);
@@ -39,17 +39,17 @@ function handleDoSomething(player) {
 }
 ```
 
-**WHY** ❓
+**¿POR QUÉ** ❓
 
-The reason why we don't do it in the first way is because each time a player is connecting to the server you are initializing multiple instances of that same events. Think of it like every time a player enters the server the event is being created an additional time.
+La razón por la que no lo hacemos de la primera manera es porque cada vez que un jugador se conecta a nuestro servidor, estamos inicializando múltiples instancias para los mismos eventos. Piensa en ello así: cada vez que un jugador entra en el servidor, el evento se crea nuevamente.
 
-If we want a single event to trigger once per user. We initialize it once outside of the event.
+Si queremos que un evento en particular se dispare una vez por usuario, lo inicializamos una vez fuera del mismo evento.
 
-### Generic WebView Example
+### Muestra Genérica de WebView
 
-Here's another example utilizing the client-side API.
+Aquí mostramos otro ej emplo de cómo utilizar la API del lado del cliente.
 
-**DO NOT DO THIS** ⚠️
+**NO HAGAS ESTO** ⚠️
 
 ```js
 const url = `https://resource/client/html/index.html`;
@@ -57,18 +57,18 @@ let view;
 let somethingToSend;
 
 alt.onServer('show:WebView', handleOpen);
-alt.onServer('close:WebView', handleClose)
+alt.onServer('close:WebView', handleClose);
 
 function handleOpen(_somethingToSend) {
     somethingToSend = _somethingToSend;
-    
-    // Load a New View
-	if (!view) {
+
+    // Carga una nueva Vista
+    if (!view) {
         view = new alt.WebView(url);
     }
-    
-    // Add an Event
-    view.on('load', handleLoad); // <-- This is a problem.
+
+    // Añade un Evento
+    view.on('load', handleLoad); // <-- Esto es un problema
     view.on('close', handleClose);
 }
 
@@ -76,7 +76,7 @@ function handleClose() {
     if (!view) {
         return;
     }
-    
+
     view.destroy();
     view = null;
 }
@@ -85,21 +85,20 @@ function handleLoad() {
     if (!view) {
         return;
     }
-    
+
     view.emit('sendSomething', somethingToSend);
 }
-
 ```
 
-As with the similar examples above, there's a reason why the highlighted line is an issue.
+Como con los ejemplos de más arriba, podemos justificar por qué la línea resaltada puede suponer un problema.
 
-Consider that when you create a WebView you are creating a single instance.
+Ten en cuenta que cuando crear una WebView, estás creando una instancia individual.
 
-After creating this single instance you want to add your events.
+Tras crear esta instancia individual, vas a añadir tus eventos.
 
-However, these events only need to be hooked into **once**.
+Sin embargo, solo puedes enganchar tus eventos **una vez**.
 
-**BETTER** ✔️
+**MEJOR HAZ ESTO** ✔️
 
 ```js
 const url = `https://resource/client/html/index.html`;
@@ -107,13 +106,13 @@ let view;
 let somethingToSend;
 
 alt.onServer('show:WebView', handleOpen);
-alt.onServer('close:WebView', handleClose)
+alt.onServer('close:WebView', handleClose);
 
 function handleOpen(_somethingToSend) {
     somethingToSend = _somethingToSend;
-    
-	if (!view) {
-        // Load New WebView and Add Events
+
+    if (!view) {
+        // Carga una nueva WebView y añade eventos
         view = new alt.WebView(url);
         view.on('load', handleLoad);
         view.on('close', handleClose);
@@ -124,7 +123,7 @@ function handleClose() {
     if (!view) {
         return;
     }
-    
+
     view.destroy();
     view = null;
 }
@@ -133,34 +132,31 @@ function handleLoad() {
     if (!view) {
         return;
     }
-    
+
     view.emit('sendSomething', somethingToSend);
 }
-
 ```
 
+## Apagando eventos no utilizados
 
+Si tienes muchos eventos, puede que encuentres que algunos de ellos no son necesarios.
 
-## Turning Off Unused Events
+Puedes apagar eventos basados en dónde se encuentran de distintas maneras.
 
-If you have a lot of events, you may find some events eventually are no longer needed.
+| Tipo de Evento de apagadoType of Off Event | Descripción                                                |
+| ------------------------------------------ | ---------------------------------------------------------- |
+| `alt.off`                                  | Apaga cualquier evento del lado del cliente o del servidor |
+| `alt.offClient`                            | Apaga cualquier evento proveniente del cliente.            |
+| `alt.offServer`                            | Apaga cualquier evento proveniente del servidor.           |
+| `yourWebViewVariable.off`                  | Apaga cualquier evento proveniente de un WebView.          |
 
-You can turn off events based on where they are in a handful of ways.
+Todos estos eventos requieren que la `function` esté apagada. Eso quiere decir que no puedes crear una función de flecha o un callback en lugar de una función, si es que quieres apagar tus eventos. Más abajo puedes encontrar algunos ejemplos de esto.
 
-| Type of Off Event         | Description                                    |
-| ------------------------- | ---------------------------------------------- |
-| `alt.off`                 | Turn off any client or server side only event. |
-| `alt.offClient`           | Turn off any event coming from the client.     |
-| `alt.offServer`           | Turn off any event coming from the server.     |
-| `yourWebViewVariable.off` | Turn off any event coming from a WebView.      |
+### Usando 'alt.off'
 
-All of these events require a `function` to be turned off. That means that you cannot create a fat arrow function or a callback in place of a function if you want to turn off your events. There are some examples below.
+Puede ser usado tanto del lado del servidor o del cliente.
 
-### Using 'alt.off'
-
-This can be done on server-side or client-side.
-
-This is an example on how to use `alt.off`
+Este es un ejemplo de cómo utilizar `alt.off`
 
 ```js
 alt.on('doSomething', handleDoSomething);
@@ -170,7 +166,6 @@ function handleDoSomething() {
     // You do not have to turn it off inside of the event.
     alt.off('doSomething', handleDoSomething); // <--- This Function
 }
-
 ```
 
 ### Using 'alt.offClient'
@@ -215,12 +210,12 @@ let view;
 let somethingToSend;
 
 alt.onServer('show:WebView', handleOpen);
-alt.onServer('close:WebView', handleClose)
+alt.onServer('close:WebView', handleClose);
 
 function handleOpen(_somethingToSend) {
     somethingToSend = _somethingToSend;
-    
-	if (!view) {
+
+    if (!view) {
         // Load New WebView and Add Events
         view = new alt.WebView(url);
         view.on('load', handleLoad);
@@ -232,14 +227,13 @@ function handleLoad() {
     if (!view) {
         return;
     }
-    
+
     view.emit('sendSomething', somethingToSend);
-    
+
     // Let's just say we want to turn off an event immediately after creating the WebView.
     // This function is how we do that.
     view.off('load', handleLoad); // <-- This Function
 }
-
 ```
 
 ## Closing Statement

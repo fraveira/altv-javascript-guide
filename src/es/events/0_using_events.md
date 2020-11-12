@@ -11,7 +11,7 @@ Abajo podemos ver usos comunes de los eventos. Podéis encontrar algunos ejemplo
 
 [Consula ejemplos de Eventos del Servidor para ver más sobre Sintáxis y Parámetros](./server_events)
 
-## Ejemplos de eventos en el lado del servidor
+## Muestras de eventos en el lado del servidor
 
 Este evento es el punto de entrada para cualquier jugador que se conecta en tu servidor. Deberías de utilizar este evento solo una vez en todo tu recurso. Escucha conexiones de jugadores. Puedes incluso kickear (echar) del servidor a un jugador antes de conectarse por completo. ck a player before they fully connect.
 
@@ -53,7 +53,7 @@ function handlePlayerConnect(player) {
 }
 ```
 
-## Ejemplo del Lado del Cliente de connectionComplete
+## Muestra del Lado del Cliente de connectionComplete
 
 La alternativa para el evento `playerConnect` es el evento `connectionComplete` del lado del cliente. Esto se dispara cuando un jugador está totalmente conectado a un servidor.
 
@@ -85,13 +85,13 @@ function handleHelloFromClient(player, msg) {
 }
 ```
 
-## playerDeath Server Side & Client Side Sample
+## Muestra en Lado del Servidor/Cliente de playerDeath
 
-Player Death is a pretty common event. If a player dies you will want to use `player.spawn` to restore their functionality.
+La muerte del jugador es un evento bastante común. Si un jugador muere, querrás utilizar `player.spawn` para devolverle su funcionalidad.
 
-You will have to ragdoll them manually after they die if you wish for them to stay there for a long time. Keep in mind you must run `player.spawn` before marking them to be rag dolled.
+Deberás de desactivarles manualmente después de que mueren si deseas que sigan en ese estado durante más tiempo. Ten en cuenta que has de ejecutar `player.spawn` antes de marcarles para que sigan en ese estado.
 
-### Server Side
+### Lado del Servidor
 
 ```js
 alt.on('playerDeath', handlePlayerDeath);
@@ -117,99 +117,99 @@ function handlePlayerDeath(victim, killer, weaponHash) {
 }
 ```
 
-### Common Use Case
+### Usos habituales.
 
-Let's say we want to ragdoll a player when they die and keep them ragdoll until they respawn there is a simple way we can do that.
+Veamos cómo mantener en estado inactivo a un jugador cuando muere y mantenerlos así hasta que respawnean. Hay un modo simple de hacer esto.
 
-#### Server Side
+#### Lado del Servidor
 
 ```js
 alt.on('playerDeath', handlePlayerDeath);
 
 function handlePlayerDeath(victim, killer, weaponHash) {
-    // Validate that the victim exists.
+    // Validamos que la víctima existe.
     if (!victim || !victim.valid) {
         return;
     }
 
-    // Respawn the player.
+    // Respawneamos al jugador.
     victim.spawn(victim.pos.x, victim.pos.y, victim.pos.z);
 
-    // If we already marked the victim as dead. Stop code execution.
+    // Si ya hemos marcado a la víctima como muera, entonces paramos la ejecución del código.
     if (victim.isDead) {
         return;
     }
 
-    // Mark the victim as dead.
+    // Marcamos la víctima como muerta
     victim.isDead = true;
     alt.emitClient(victim, 'death:Handle', victim.isDead);
 
-    // Start a timeout in 5 seconds that will respawn them.
+    // Comenzamos una cuenta atrás para que en 5 segundos la víctima respawnee.
     alt.setTimeout(() => {
-        // Verify they are still in the server in 5 seconds.
+        // Verifica que todavía siguen en el servidor tras 5 segundos.
         if (!victim || !victim.valid) {
             return;
         }
 
-        // Unmark them as dead and respawn them.
+        // Desmárcalos como muertos y respawnéalos.
         victim.isDead = false;
         alt.emitClient(victim, 'death:Handle', victim.isDead);
-        victim.spawn(0, 0, 0); // Set to your Hospital Position
+        victim.spawn(0, 0, 0); // Pon la posición de tu hospital
         victim.health = 200;
     }, 5000);
 }
 ```
 
-#### Client Side
+#### Lado del Cliente
 
 ```js
 let interval;
 let isDead = false;
 
-// Receive the value from server side.
+// Recibimos el valor del lado del servidor.
 alt.on('death:Handle', value => {
-    // Update our local value.
+    // Actualiza tu valor local.
     isDead = value;
 
-    // If the value is false. Don't re-create the interval.
+    // Si el valor es negativo, no recreemos el intervalo.
     if (!isDead) {
         return;
     }
 
-    // Start an interval that calls a function every 100ms.
+    // Inicia un intervalo que llama a la función cada 100 milisegundos.
     interval = alt.setInterval(handleDeathTicks, 100);
 });
 
 function handleDeathTicks() {
-    // If they are no longer marked as dead. Clear the interval.
+    // Si ya no están marcados como muertos, se borra el intervalo.
     if (!isDead) {
         alt.clearInterval(interval);
         return;
     }
 
-    // If they are marked as dead. Ragdoll them.
+    // Si están marcados como muertos, "ragdol-lealos".
     native.setPedToRagdoll(alt.Player.local.scriptID, 5000, 0, 0, true, true, false);
 }
 ```
 
-## playerLeftVehicle & playerEnteredVehicle Server Side Sample
+## Muestra del lado del Servidor de playerLeftVehicle y playerEnteredVehicle.
 
-These events are triggered when a player enters or leaves a vehicle.
+Estos eventos se disparan cuando un jugador entra o deja un vehículo.
 
-Here's an example of deleting the vehicle the player entered after they exit it.
+Aquí mostramos un ejemplo de cómo borrar el vehículo que un jugador ha utilizado cuando sale de él.
 
 ```js
 alt.on('playerEnteredVehicle', handlePlayerEnteredVehicle);
 alt.on('playerLeftVehicle', handlePlayerLeftVehicle);
 
 function handlePlayerEnteredVehicle(player, vehicle, seat) {
-    // Store information about the vehicle and seat on the player.
+    // Guarda información sobre el vehículo, y el asiento del jugador.
     player.currentSeat = seat;
     player.lastVehicle = vehicle;
 }
 
 function handlePlayerLeftVehicle(player, vehicle, seat) {
-    // Check if the seat is the driver seat. Check if the vehicle is valid.
+    // Verifica si el asiento es el asiento del conductor. Verifica si el vehículo es válido.
     if (player.currentSeat === -1 && player.lastVehicle.valid) {
         player.lastVehicle.destroy();
         player.lastVehicle = null;
