@@ -162,47 +162,47 @@ Este es un ejemplo de cómo utilizar `alt.off`
 alt.on('doSomething', handleDoSomething);
 
 function handleDoSomething() {
-    // This function can be called from anywhere.
-    // You do not have to turn it off inside of the event.
-    alt.off('doSomething', handleDoSomething); // <--- This Function
+    // Esta función puede invocarse desde cualquier lugar.
+    // No tienes que apagarla dentro del  evento.
+    alt.off('doSomething', handleDoSomething); // <--- Esta función
 }
 ```
 
-### Using 'alt.offClient'
+### Usando 'alt.offClient'
 
-This can be done **only** on server-side.
+Esto puede hacerse **solamente** del lado del servidor.
 
-This is an example on how to use `alt.offClient`.
+Este es un ejemplo de cómo usar `alt.offClient`.
 
 ```js
 alt.onClient('doSomething', handleDoSomething);
 
 function handleDoSomething() {
-    // This function can be called from anywhere.
-    // You do not have to turn it off inside of the event.
-    alt.offClient('doSomething', handleDoSomething); // <--- This Function
+    // Esta función puede invocarse desde cualquier lugar.
+    //  No tienes que apagarla dentro del  evento.
+    alt.offClient('doSomething', handleDoSomething); // <--- Esta función
 }
 ```
 
-### Using 'alt.offServer'
+### Usando 'alt.offServer'
 
-This can be done **only** on client-side.
+Esto puede hacerse **solamente** del lado del cliente.
 
-This is an example on how to use `alt.offServer`
+Este es un ejemplo de cómo usar `alt.offServer`
 
 ```js
 alt.onServer('doSomething', handleDoSomething);
 
 function handleDoSomething() {
-    // This function can be called from anywhere.
-    // You do not have to turn it off inside of the event.
-    alt.offServer('doSomething', handleDoSomething); // <--- This Function
+    // Esta función puede invocarse desde cualquier lugar.
+    // No tienes que apagarla dentro del  evento.
+    alt.offServer('doSomething', handleDoSomething); // <--- Esta función
 }
 ```
 
 ### Using 'yourWebView.off'
 
-This example uses a WebView which is **only** on client-side.
+En este ejemplo se usa WebView que se muestra **solamente** en el lado del cliente.
 
 ```js
 const url = `https://resource/client/html/index.html`;
@@ -216,7 +216,7 @@ function handleOpen(_somethingToSend) {
     somethingToSend = _somethingToSend;
 
     if (!view) {
-        // Load New WebView and Add Events
+        // Cargar una nueva WebView y añadir eventos
         view = new alt.WebView(url);
         view.on('load', handleLoad);
         view.on('close', handleClose);
@@ -230,14 +230,14 @@ function handleLoad() {
 
     view.emit('sendSomething', somethingToSend);
 
-    // Let's just say we want to turn off an event immediately after creating the WebView.
-    // This function is how we do that.
-    view.off('load', handleLoad); // <-- This Function
+    // Digamos que queremos apagar un evento justo tras crear la WebView.
+    // Esta función muestra la manera.
+    view.off('load', handleLoad); // <-- Esta función.
 }
 ```
 
-## Closing Statement
+## Declaración de cierre
 
-Keep in mind that if you turn off an event, you will need to re-initialize it.
+Ten en cuenta que si apagas un evento, necesitarás reinicializarlo después.
 
-Use this to your advantage and you do not need to turn off every event this is just a feature that should be utilized more.
+Aprovéchate de esto y no tendrás que apagar todos los eventos. Esta es solo una característica que debería ser utilizada más frecuentemente.
