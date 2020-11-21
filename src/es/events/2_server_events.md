@@ -1,12 +1,12 @@
-# Server Event Usage & Examples
+# Usos y ejemplos de Eventos del Servidor.
 
-This is a document that will provide an example for every server event. This is necessary to really ensure you get a firm grasp on how an event is triggered and handled.
+Este documento proporciona un ejemplo para todos los eventos del servidor. Creemos que esto es necesario para asegurarnos de que verdaderamente entiendes cómo se disparan y tratan los eventos en alt:V.
 
 ## anyResourceError
 
-This is triggered when you load a resource in your `server.cfg` and it **errors**.
+Se dispara cuando cargas un recurso en `server.cfg` y da **error**.
 
--   resourceName is the name of a resource in your `server.cfg`
+-   resourceName es el nombre del recurso en tu archivo `server.cfg`
 
 ```js
 alt.on('anyResourceError', handleEvent);
@@ -18,9 +18,9 @@ function handleEvent(resourceName) {
 
 ## anyResourceStart
 
-This is triggered when you load a resource in your `server.cfg` and it loads correctly.
+Se dispara cuando cargas un recurso your `server.cfg` y carga de manera correcta.
 
--   resourceName is the name of a resource in your `server.cfg`
+-   resourceName es el nombre del recurso en tu archivo `server.cfg`
 
 ```js
 alt.on('anyResourceStart', handleEvent);
@@ -32,9 +32,9 @@ function handleEvent(resourceName) {
 
 ## anyResourceStop
 
-This is triggered when you forcefully stop a resource programmatically or through the console.
+Se dispara cuando fuerzas la detención de un recurso programáticamente o a través de la consola.
 
--   resourceName is the name of a resource in your `server.cfg`
+-   resourceName es el nombre del recurso en tu archivo `server.cfg`
 
 ```js
 alt.on('anyResourceStop', handleEvent);
@@ -47,9 +47,9 @@ function handleEvent(resourceName) {
 
 ## consoleCommand
 
-This is triggered when you type some data into your alt:V server console. It automatically separates your words after you press enter.
+Se dispara cuando escribes en la consola del servidor en alt:V. Automáticamente separa tus palabras cuando presionas enter.
 
--   args is an Array of strings
+-   args es una matriz de cadenas
 
 ```js
 alt.on('consoleCommand', handleEvent);
@@ -61,7 +61,7 @@ function handleEvent(args) {
         return;
     }
 
-    // This kicks all players currently online.
+    // Esto kickea a todos los jugadores que se encuentran online.
     const players = [...alt.Player.all];
     for (let i = 0; i < players.length; i++) {
         if (!players[i] || !players[i].valid) {
@@ -73,7 +73,7 @@ function handleEvent(args) {
 }
 ```
 
-Assume we typed the following in the server console.
+Digamos que escribimos el siguiente mensaje en la consola del servidor.
 
 ```
 kickall
@@ -81,106 +81,106 @@ kickall
 
 ## entityEnterColshape
 
-If you want to check if a player enters a specific area on the server-side. You can use a ColShape.
+Si quieres verificar desde el lado del servidor si un jugador entra en un área específica, puedes usar una ColShape.
 
-They come in [various shapes and sizes](https://altmp.github.io/altv-typings/classes/_alt_server_.colshape.html) and we will be using a Cylinder in this example.
+Están disponibles en [distintas formas y tamaños](https://altmp.github.io/altv-typings/classes/_alt_server_.colshape.html) y utilizaremos un cilindro para ilustrar este ejemplo.
 
--   colshape can be any colshape where a player enters it.
--   entity can be a Vehicle or a Player.
+-   colshape puede ser cualquier colshape cuando un jugador entra en ella (collission shape: forma de colisión)
+-   la entidad puede ser tanto un Vehículo como un Jugador. -
 
 ```js
-// Create a ColshapeCylinder
-// (x, y, z, radius, height) Parameters
+// Crear un ColshapeCylinder
+// Parámetros entre paréntesis ( coordenadas x, y, z, radio, altura)
 const cs = new alt.ColshapeCylinder(0, 0, 0, 3, 200);
 
-// This is a fat arrow function we can access from the colshape's isntance.
+// Esta es una función flecha que podemos acceder desde la instancia de la colshape.
 cs.doSomething = player => {
     console.log(`You have a player in your grasp.`);
 };
 
-// Create the event.
+// Crear el evento.
 alt.on('entityEnterColshape', handleEvent);
 
-// Handle the event.
+// Manejar el evento.
 function handleEvent(colshape, entity) {
-    // Strain out any Entities that are not a player.
+    // Dejar de lado cualquier entidad que no sea un jugador.
     if (typeof entity !== alt.Player) {
         return;
     }
 
-    // Check if the function exists. Then execute the function.
+    // Comprobar si la función existe, luego, ejecutarla.
     if (typeof cs.doSomething === 'function') {
-        cs.doSomething(entity); // <-- Calling the fat arrow function and passing the player.
+        cs.doSomething(entity); // <-- Llamar la función flecha y pasarle el jugador como argumento.
     }
 }
 ```
 
 ## entityLeaveColshape
 
-If you want to check if a player leaves a specific area on the server-side. You can use a ColShape.
+Si quieres comprobar desde el lado del servidor si un jugador deja un área específica, puedes usar una ColShape.
 
-They come in [various shapes and sizes](https://altmp.github.io/altv-typings/classes/_alt_server_.colshape.html) and we will be using a Cylinder in this example.
+Están disponibles en [distintas formas y tamaños](https://altmp.github.io/altv-typings/classes/_alt_server_.colshape.html) y utilizaremos un cilindro para ilustrar este ejemplo.
 
--   colshape can be any colshape where a player enters it.
--   entity can be a Vehicle or a Player.
+-   colshape puede ser cualquier colshape cuando un jugador entra o sale de ella (collission shape: forma de colisión)
+-   la entidad puede ser tanto un Vehículo como un Jugador. -
 
 ```js
-// Create a ColshapeCylinder
-// (x, y, z, radius, height) Parameters
+// Crear un ColshapeCylinder
+// Parámetros entre paréntesis ( coordenadas x, y, z, radio, altura)
 const cs = new alt.ColshapeCylinder(0, 0, 0, 3, 200);
 
-// This is a fat arrow function we can access from the colshape's isntance.
+// Esta es una función flecha que podemos acceder desde la instancia de la colshape.
 cs.doSomething = player => {
     console.log(`You no longer have a player in your grasp.`);
 };
 
-// Create the event.
+// Crear el evento.
 alt.on('entityLeaveColshape', handleEvent);
 
-// Handle the event.
+// Manejar el evento.
 function handleEvent(colshape, entity) {
-    // Strain out any Entities that are not a player.
+    // Obviar cualquier entidad que no sea un jugador.
     if (typeof entity !== alt.Player) {
         return;
     }
 
-    // Check if the function exists. Then execute the function.
+    // Comprobar si la función existe para luego ejecutarla.
     if (typeof cs.doSomething === 'function') {
-        cs.doSomething(entity); // <-- Calling the fat arrow function and passing the player.
+        cs.doSomething(entity); // <-- Llamar la función flecha y pasarle el jugador como argumento
     }
 }
 ```
 
 ## explosion
 
-Explosion is a really unique event. In most servers they'll often turn off explosions. This is one of those events that you can throw a `return false` at the end to stop all explosions from doing damage on the server.
+Una explosión es un evento único. En la mayoría de los servers se desactivan las explosiones. Este es uno de aquellos eventos en los que podemos retornar `return false` al final para evitar que las explosiones provoquen daños en el servidor.
 
--   Entity is the source of the damage.
--   explosionType is a number.
--   position is the location of the explosion
--   exposionFx is the hash of the ScreenFx used for the explosion
--   target is who this explosion was targeted for.
+-   entity es el origen del daño.
+-   explosionType es un número
+-   position es la ubicación de la explosión
+-   exposionFx es el hash de ScreenFx utilizado para la explosión.
+-   target es a quién/qué iba dirigida esta explosión.
 
 ```js
 alt.on('explosion', handleEvent);
 
 function handleEvent(entity, explosionType, position, explosionFxNumberOrHash, target?) {
     if (explosionType === 0) {
-        return false; // Don't Do Damage to Players
+        return false; // Para no hacer daño a otros jugadores.
     }
 
-    return true; // Do Damage to Players
+    return true; // Hacer daño a otros jugadores
 }
 ```
 
 ## playerChangedVehicleSeat
 
-This event is called when a player is shuffling from one seat to another.
+Este evento es llamado cuando un jugador se cambia de un asiento a otro.
 
--   player is a player instance of who is performing the shuffling.
--   vehicle is the vehicle that this is currently taking place in
--   oldSeat is the old seat the player was in.
--   newSeat is the new seat the player is in.
+-   player es una instancia de jugador que está cambiándose de asiento.
+-   vehicle es el vehículo en el que se está subido.
+-   oldSeat es el asiento anterior en el que el jugador estaba sentado.
+-   newSeat es el nuevo asiento en el que el jugador se encuentra.
 
 ```js
 alt.on('playerChangedVehicleSeat', handleEvent);
@@ -194,15 +194,15 @@ function handleEvent(player, vehicle, oldSeat, newSeat) {
 
 ## playerConnect
 
-This is the event that occurs when a player has connected to the server.
+Evento que ocurre cuando un jugador se conecta al servidor.
 
-The player can have their connection cancelled by running `player.kick()` command.
+Se puede cancelar la conexión del jugador ejecutando el comando `player.kick()`.
 
-### Nothing Happens On Player Connect
+### Nada ocurre tras la Conexión del Jugador
 
-It's important to understand that **NOTHING HAPPENS** after a player connects. You must use `player.spawn` and `player.model` to see the player.
+Es importante entender que **NADA OCURRE** cuando un jugador se conecta. Has de usar `player.spawn` y `player.model` para ver al jugador.
 
--   player is the player who joined the server.
+-   player es el jugador que se ha unido al servidor.
 
 ```js
 alt.on('playerConnect', handleEvent);
@@ -226,16 +226,16 @@ function handleEvent(player) {
 
 ## playerDamage
 
-This is event that occurs when a player takes damage. Damage can be negated by adding back missing health.
+Este evento ocurre cuando un jugador recibe daño. El daño puede ser negado añadiendo de nuevo la salud faltante.
 
-It is recommended to not use this event in place of playerDeath. They have their own respective uses.
+Se recomienda no usar este evento como alternativa a playerDeath. Cada cual tiene sus usos respectivos.
 
-If you want body parts damaged and other information see [weaponDamage](#weaponDamage)
+Si quieres las partes del cuerpo que han sido dañadas y otra información, consulta [weaponDamage](#weaponDamage)
 
--   player is the player who is being damaged
--   attacker is the player who is attacking the player
--   weaponHash is the hash number for a weapon
--   damage is the damage done to the player
+-   player es el jugador que está siendo dañado
+-   attacker es el jugador que está atacando al otro jugador.
+-   weaponHash es el número hash para un arma
+-   damage es el daño realizado a un jugador
 
 ```js
 alt.on('playerDamage', handleEvent);
@@ -248,49 +248,49 @@ function handleEvent(player, attacker, weaponHash, damage) {
     }
 
     if (player.health <= 100) {
-        // They're dead
+        // Están muertos
         player.spawn(player.pos.x, player.pos.y, player.pos.z);
     }
 
-    return false; // This will negate all damage taken. It will not respawn a player.
+    return false; // Esto va a anular todo el daño recibido. No va a respawnear al jugador.
 }
 ```
 
 ## playerDeath
 
-If you suddenly lose all of your health and die. This is the event that gets triggered.
+Si pierdes toda la salud y mueres, este es el evento que se dispara.
 
--   player is the player who died.
--   attacker is the player who caused this player to die. It can sometimes be the player.
--   weaponHash is the hash of the weapon used.
+-   player es el jugador que murió.
+-   attacker es el jugador que causó la muerte de este jugador. Puede ser él mismo.
+-   weaponHash es el hash del arma utilizada.
 
 ```js
 alt.on('playerDamage', handleEvent);
 
 function handleEvent(player, attacker, weaponHash) {
     console.log(`${player.name} has died in the hands of ${attacker.name}.`);
-    player.spawn(player.pos.x, player.pos.y, player.pos.z, 5000); // This will respawn the player in place after 5 seconds.
+    player.spawn(player.pos.x, player.pos.y, player.pos.z, 5000); // Esto respawneará al jugador en el lugar en 5 segundos.
 }
 ```
 
 ## playerDisconnect
 
-This is the disconnect event for when a player leaves the server.
+Este es el evento de desconexión cuando un jugador abandona el servidor.
 
--   player is the player who has left the server.
--   reason is why the player has left the server.
+-   player es el jugador que ha abandonado el servidor.
+-   reason es la razón por la que se ha abandonado el servidor.
 
 ```js
 alt.on('playerDisconnect', handleEvent);
 
 function handleEvent(player, reason) {
-    // You should check if the player is valid. Data from prototyping can be lost if they're invalid.
+    // Deberías the comprobar si el jugador es válido. La información del prototipo puede perderse si son inválidos.
     if (!player || !player.valid) {
         console.error(`Could not get data for a player. ${player.name}`);
     } else {
-        // Clone your data you want to save here asap.
-        // Do a database save statement here.
-        // After this function ends the player data is lost.
+        // Clona la información que quieres guardar aquí tan pronto como sea posible.
+        // Haz una declaración de tu base de datos aquí.
+        // Tan pronto como esta función finaliza, la información del jugador se pierde.
     }
 
     console.log(`${player.name} has disconnected.`);
@@ -299,41 +299,41 @@ function handleEvent(player, reason) {
 
 ## playerEnteredVehicle
 
-This event is trigger when a player has **sat down** in a vehicle. **Not** **Entering**. **Not Beginning To Enter**.
+Este evento se dispara cuando un jugador se ha **sentado** en un vehículo. **No** **entrando**. **No comenzando a entrar**.
 
--   player who entered the vehicle.
--   vehicle the player has sat down inside of.
--   seat is the seat the player is sitting in. See [seat table for more info](#Seat Table)
+-   player que entró en el vehículo.
+-   vehicle en el que el jugador se ha sentado.
+-   seat es el asiento en el que el jugador está sentado. Consulta[esta tabla de asientos para más información](#Seat Table)
 
 ```js
 alt.on('playerEnteredVehicle', handleEvent);
 
 function handleEvent(player, vehicle, seat) {
     console.log(`${player.name} left the ${vehicle.model} by entering seat ${seat}`);
-    vehicle.engineOn = true; // <-- Car goes brr.
+    vehicle.engineOn = true; // <-- El motor se enciende.
 }
 ```
 
 ## playerLeftVehicle
 
-This event is triggered when the player has completely left a vehicle. **Not Leaving**. **Not Beginning to Leave**.
+Este evento se dispara cuando un jugador ha abandonado un vehículo completamente. **No en proceso de abandonarlo**. **No comenzando a abandonarlo**.
 
--   player who left the vehicle.
--   vehicle the player is standing outside of.
--   seat is the seat the player was sitting in. See [seat table for more info](#Seat Table)
+-   player que abandonó el vehículo.
+-   vehicle que el jugador ha dejado.
+-   seat es el asiento en el que el jugador se estaba sentando. Consulta [esta tabla para ver más información](#Seat Table)
 
 ```js
 alt.on('playerLeftVehicle', handleEvent);
 
 function handleEvent(player, vehicle, seat) {
     console.log(`${player.name} left the ${vehicle.model} by leaving seat ${seat}`);
-    vehicle.engineOn = true; // <-- Car goes brr.
+    vehicle.engineOn = false; // <--  El motor se apaga
 }
 ```
 
 ## removeEntity
 
-This event is when a entity is destroyed; such as a player, vehicle, blip, and colshape.
+Este evento se activa cuando una entidad es destruida, entidad como un jugador, vehículo, blip o forma de colisión (colshape).
 
 -   object is either `player, vehicle, blip, or colshape`.
 
@@ -361,9 +361,9 @@ function handleEvent(someObject) {
 
 ## resourceStart
 
-This is called when your resource is starting.
+A esto se le llama cuando un recurso está inicializándose.
 
--   errored lets us know if the resource failed to load.
+-   errored nos indica qué recurso falló al cargar..
 
 ```js
 alt.on('resourceStart', handleEvent);
@@ -379,7 +379,7 @@ function handleEvent(errored) {
 
 ## resourceStop
 
-This is called when your resource has stopped. Its final breathe before it gives up on life.
+A esto se le llama cuando un recurso ha parado. Es su último aliento antes de morir.
 
 ```js
 alt.on('resourceStop', handleEvent);
@@ -391,14 +391,14 @@ function handleEvent() {
 
 ## syncedMetaChange
 
-This is called when a synced meta value changes for any player, vehicle, colshape, or blip.
+Se le llama cuando el valor synced meta cambia para cualquier jugador, vehículo, colshape o blip.
 
-Keep in mind that **syncedMeta** can be **accessed from server and client side.**
+Ten en cuenta que a **syncedMeta** se puede **acceder desde el lado del servidor y del cliente.**
 
--   entity is a `player, vehicle, colshape, or blip`
--   key is an identifier that data is identified with. Think of it as a key in a map for JavaScript.
--   value is the value associated with the key.
--   oldValue is the value previous to the current value being passed.
+-   entity es un `player, vehicle, colshape, or blip`
+-   key es un identificador con el que la información se identifica. Piensa en ello como un key en map en términos de JavaScript.
+-   value es un valor asociado con esa key.
+-   oldValue es el valor anterior al valor que se está siendo pasado ahora.
 
 ```js
 alt.on('playerConnect', player => {
@@ -408,31 +408,31 @@ alt.on('playerConnect', player => {
 alt.on('syncedMetaChange', handleEvent);
 
 function handleEvent(entity, key, value, oldValue) {
-    // Filter out non-player types.
+    // Filtrar todas entidades que no sean jugadores.
     if (typeof entity !== alt.Player) {
         return;
     }
 
-    // Compare the key if it's what we are looking for.
+    // Comparar si key es lo que estamos buscando.
     if (key !== 'connected') {
         return;
     }
 
-    // We just made an overly complicated console.log for a player connected. Yay!
+    // Acabamos de diseñar un innecesariamente complejo console.log para cuando un jugador se conecta. ¡¡Olé!!
     console.log(`${player.name} has connected.`);
 }
 ```
 
 ## streamSyncedMetaChange
 
-This is called when a synced meta value changes for any player, vehicle, colshape, or blip.
+Se le llama cuando el valor synced meta cambia para cualquier jugador, vehículo, colshape o blip.
 
-Keep in mind that **streamSyncedMeta** can be **accessed from server and client side** by players who are within other's streaming range.
+Ten en cuenta que a **streamSyncedMeta** se puede **acceder tanto desde el lado del servidor como del cliente** por jugadores que están dentro del rango streaming del otro.
 
--   entity is a `player, vehicle, colshape, or blip`
--   key is an identifier that data is identified with. Think of it as a key in a map for JavaScript.
--   value is the value associated with the key.
--   oldValue is the value previous to the current value being passed.
+-   entity es un `player, vehicle, colshape, or blip`
+-   key es un identificador con el que la información se identifica. Piensa en ello como un key en map en términos de JavaScript.
+-   value es un valor asociado con esa key.
+-   oldValue es el valor anterior al valor que se está siendo pasado ahora.
 
 ```js
 alt.on('playerConnect', player => {
@@ -442,32 +442,32 @@ alt.on('playerConnect', player => {
 alt.on('streamSyncedMetaChange', handleEvent);
 
 function handleEvent(entity, key, value, oldValue) {
-    // Filter out non-player types.
+    // Filtrar todas entidades que no sean jugadores.
     if (typeof entity !== alt.Player) {
         return;
     }
 
-    // Compare the key if it's what we are looking for.
+    // Comparar si key es lo que estamos buscando.
     if (key !== 'connected') {
         return;
     }
 
-    // We just made an overly complicated console.log for a player connected. Yay!
+    // Acabamos de diseñar un innecesariamente complejo console.log para cuando un jugador se conecta. ¡¡Bien!!
     console.log(`${player.name} has connected.`);
 }
 ```
 
 ## globalMetaChange
 
-We will skip this one until it is implemented. Currently **not implemented**.
+Saltaremos esta hasta que se implemente. Actualmente **no implementado**.
 
 ## globalSyncedMetaChange
 
-We will skip this one until it is implemented. Currently **not implemented**.
+Saltaremos esta hasta que se implemente. Actualmente **no implementado**.
 
 ## vehicleDestroy
 
-This is called when a vehicle has been damaged to the point where it has been destroyed.
+Se le llamada c uando un vehículo ha sido dañado al punto en que ha sido destruido.
 
 ```js
 const vehicle = new alt.Vehicle('infernus', 0, 0, 0, 0, 0, 0);
@@ -483,23 +483,23 @@ function handleEvent(vehicle) {
         vehicle.destroy();
     }
 
-    // Respawns the vehicle when its destroyed.
+    // Respawnea el vehículo cuando ha sido destruido.
     new alt.Vehicle(oldModel, newPosition.x, newPosition.y, newPosition.z, 0, 0, 0);
 }
 ```
 
 ## weaponDamage
 
-This is event that occurs when a player does damage with a weapon. Damage can be negated by adding back missing health.
+Evento que ocurre cuando un jugador provoca daño con un arma. El daño puede ser negado añadiendo la salud que se ha restado.
 
-It is recommended to not use this event in place of playerDeath. They have their own respective uses.
+Se recomienda no utilizar este evento en lugar de playerDeath. Cada cual tiene su respectivo uso.
 
--   player is the player who is being damaged
--   target is the player who is being attacked by the player
--   weaponHash is the hash number for a weapon
--   damage is the damage done to the player
--   offset is a vector3 representing where the player got hit exactly
--   bodyPart is the bone index of where the player got hit
+-   player es el jugador que está causando daño.
+-   target es el jugador que está siendo atacado por el jugador "player"
+-   weaponHash es el número hash de un arma
+-   damage es el daño realizado al jugador
+-   offset es un vector3 que representa dónde se ha dañado al jugador exactamente
+-   bodyPart es el índice bone donde el jugador fue dañado.
 
 ```js
 alt.on('weaponDamage', handleEvent);
@@ -514,19 +514,19 @@ function handleEvent(player, target, weaponHash, damage, offset, bodyPart) {
 
 ## startFire
 
-We will skip this one until it is implemented. Currently **not implemented**.
+Saltaremos esta hasta que se implemente. Actualmente **no implementado**.
 
 ## startProjectile
 
-We will skip this one until it is implemented. Currently **not implemented**.
+Saltaremos esta hasta que se implemente. Actualmente **no implementado**.
 
 ## playerWeaponChange
 
-This is when a player switches from and old weapon to a new weapon.
+Esto sucede cuando un jugador cambia de un arma a otra distinta.
 
--   player is the player who is swtiching weapons.
--   oldWeapon is the number or hash of the old weapon used.
--   newWeapon is the number or hash of the new weapon being used.
+-   player es el jugador que se encuentra cambiando armas.
+-   oldWeapon es el número hash de la anterior arma usada.
+-   newWeapon es el número hash de la nueva arma que está siendo utilizada.
 
 ```js
 alt.on('playerWeaponChange', handleEvent);
