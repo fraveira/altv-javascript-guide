@@ -532,7 +532,7 @@ Esto sucede cuando un jugador cambia de un arma a otra distinta.
 alt.on('playerWeaponChange', handleEvent);
 
 function handleEvent(player, oldWeapon, newWeapon) {
-    // Prevent Weapon Swapping
+    // Evitar cambiar de arma
     player.currentWeapon = oldWeapon;
 }
 ```

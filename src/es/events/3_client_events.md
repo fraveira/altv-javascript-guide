@@ -1,12 +1,12 @@
-# Client Event Usage & Examples
+# Uso y ejemplos de Eventos del Cliente
 
-This is a document that will provide an example for every server event. This is necessary to really ensure you get a firm grasp on how an event is triggered and handled.
+Este documento proporciona un ejemplo para cada evento del cliente. Creemos que esto es fundamental para asegurarnos de que verdaderamente entiendes cómo se disparan y tratan los eventos en alt:V.
 
-## An Important Tip
+## Un truco importante
 
-If you're trying to use `console.log` on client-side. It will **not** work.
+Si intentas utilizar `console.log` en el lado del cliente, **no** va a funcionar.
 
-You must use `alt.log` instead.
+Deberás utilizar `alt.log`.
 
 ```js
 alt.log(`Hello on client side.`);
@@ -15,9 +15,9 @@ alt.log(`Your position is: ${JSON.stringify(alt.Player.local.pos)}`);
 
 ## anyResourceError
 
-This is triggered when you load a resource in your `server.cfg` and it **errors**.
+Se dispara cuando cargas un recurso en tu archivo `server.cfg` y tira un **error**.
 
--   resourceName is the name of a resource in your `server.cfg`
+-   resourceName es el nombre del recurso en tu `server.cfg`
 
 ```js
 alt.on('anyResourceError', handleEvent);
@@ -29,9 +29,9 @@ function handleEvent(resourceName) {
 
 ## anyResourceStart
 
-This is triggered when you load a resource in your `server.cfg` and it loads correctly.
+Se dispara cuando cargar un recurso en tu `server.cfg` y carga correctamente.
 
--   resourceName is the name of a resource in your `server.cfg`
+-   resourceName es el nombre del recurso en tu `server.cfg`
 
 ```js
 alt.on('anyResourceStart', handleEvent);
@@ -43,22 +43,22 @@ function handleEvent(resourceName) {
 
 ## anyResourceStop
 
-This is triggered when you forcefully stop a resource programmatically or through the console.
+Se dispara cuando fuerzas la detención de un recurso a través de código o de la consola.
 
--   resourceName is the name of a resource in your `server.cfg`
+-   resourceName es el nombre de un recurso en tu `server.cfg`
 
 ```js
 alt.on('anyResourceStop', handleEvent);
 
 function handleEvent(resourceName) {
     console.log(`${resourceName} has been stopped. Restarting the resource.`);
-    alt.restartResource(resourceName); // <-- This triggers the resource that stopped to restart automatically.
+    alt.restartResource(resourceName); // <-- Dispara el recurso que se paró para que reinicialice automáticamente.
 }
 ```
 
 ## connectionComplete
 
-This is called when you have entered the server and all resources for you have loaded.
+A este evento se le llama cuando has accedido al servidor y todos los recursos se han cargado para ti.
 
 ```js
 alt.on('connectionComplete', handleEvent);
@@ -70,9 +70,9 @@ function handleEvent() {
 
 ## consoleCommand
 
-This is triggered when you type some data into your alt:V Client server console. It automatically separates your words after you press enter.
+Se dispara cuando escribes algo en la consola del cliente de alt:V. Automáticamente separa tus palabras cuando presionas enter.
 
--   args is an Array of strings
+-   args es una matriz de cadenas
 
 ```js
 alt.on('consoleCommand', handleEvent);
@@ -88,7 +88,7 @@ function handleEvent(args) {
 }
 ```
 
-Assume we typed the following in the server console.
+Digamos que escribimos esto en la consola del servidor.
 
 ```
 loghello
@@ -96,108 +96,106 @@ loghello
 
 ## disconnect
 
-This is mostly useful when you are reconnecting to your local development environment. This is used to clean up any game changes before you reconnect once again.
+Este evento es más útil cuando estás reconectando tu entorno de desarrollo local. Se utiliza para limpiar cualquiera de los cambios hechos en el juego antes de reconectar nuevamente.
 
 ```js
 alt.on('disconnect', handleEvent);
 
 function handleEvent() {
-    alt.log(`You have disconnected.`)
-	// No more messages or functions work after this event.
+    alt.log(`You have disconnected.`);
+    // Después de este evento no funcionan más mensajes o funciones.
 }
 ```
 
 ## gameEntityCreate
 
-This is called when a player, vehicle, or anything else comes into streaming range of a client.
+Se le llama cuando un jugador, vehículo, o cualquier otra cosa entra en el rango de streaming del cliente.
 
-Meaning if a vehicle is entering from outside of your streaming range it will begin to be synchronized for the player inside of this event.
+Queremos decir que si a un vehículo se está entrando desde fuera de tu rango de streaming, comenzará a sincronizarse para el jugador que se encuentre dentro de este evento.
 
-* entity is the entity created.
+-   entity es la entidad creada. .
 
-### Server Side
+### Lado del servidor
 
 ```js
-alt.on('playerConnect', (player) => {
-   player.model = 'mp_m_freemode_01';
-   player.spawn(0, 0, 0);
-    
-   // Spawn a Vehicle
-   const vehicle = new alt.Vehicle('infernus', 0, 0, 0, 0, 0, 0);
-   alt.emitClient(player, 'setIntoVehicle', vehicle);
+alt.on('playerConnect', player => {
+    player.model = 'mp_m_freemode_01';
+    player.spawn(0, 0, 0);
+
+    // Spawnear un vehículo.
+    const vehicle = new alt.Vehicle('infernus', 0, 0, 0, 0, 0, 0);
+    alt.emitClient(player, 'setIntoVehicle', vehicle);
 });
 ```
 
-### Client Side
+### Lado del cliente
 
 ```js
-// Begin Setup for Server Side
+// Comienza la ejecución desde el lado del servidor.
 alt.onServer('setIntoVehicle', handleSetIntoVehicle);
 
 function handleSetIntoVehicle(vehicle) {
     alt.Player.local.needsVehicle = vehicle;
 }
 
-
-// Begin Event Implementation
+// Comienza la implementación del evento
 alt.on('gameEntityCreate', handleEvent);
 
 function handleEvent(entity) {
-    // Check if this is a vehicle entity.
-	if (typeof entity !== alt.Vehicle) {
+    // Verifica si la entidad es un vehículo.
+    if (typeof entity !== alt.Vehicle) {
         return;
     }
 
-    // Check if this is the vehicle we're looking for.
-	if (alt.Player.local.needsVehicle !== entity) {
+    // Verifica si este es el vehículo que estamos esperando.
+    if (alt.Player.local.needsVehicle !== entity) {
         return;
     }
 
-    // Shut off looking for new vehicles.
-	alt.Player.local.needsVehicle = false;
+    // Desactiva la búsqueda de nuevos vehículos.
+    alt.Player.local.needsVehicle = false;
 
-    // Set them into the drivers seat.
-    // ScriptID is used to get the handle of the vehicle and player for natives.
+    // Les coloca en el asiento del conductor.
+    // ScriptID se utiliza para obtener el handle del vehículo de y del jugador de los "natives".
     native.setPedIntoVehicle(alt.Player.local.scriptID, vehicle.scriptID, -1);
 }
 ```
 
 ## gameEntityDestroy
 
-This is called when a vehicle, player, or anything else leaves the streaming range of a client.
+Se le llama cuando un vehículo, jugador, o cualquier cosa, deja el rango streaming de un cliente.
 
-This is great when you need to destroy objects attached to players leaving an area.
+Esta es una opción muy buena en caso de que necesites destruir objetos asociados a jugadores que dejan un área.
 
-Let's assume the entity below has an object on them defined by its scriptID.
+Digamos que la entidad más abajo posee un objeto definido por su scriptID.
 
 ```js
-
 alt.on('gameEntityDestroy', handleEvent);
 
 function handleEvent(entity) {
-    // Check if this is a vehicle entity.
-	if (typeof entity !== alt.Player) {
+    // Comprobar si esta entidad es un vehículo.
+    if (typeof entity !== alt.Player) {
         return;
     }
 
-    // Check if this is the vehicle we're looking for.
-	if (!alt.Player.local.attachedObject) {
+    // Comprobar si este es el vehículo que queremos.
+    if (!alt.Player.local.attachedObject) {
         return;
     }
 
-    // Delete said object.
-	native.deleteEntity(alt.Player.local.attachedObject);
+    // Borrar dicho objeto.
+    native.deleteEntity(alt.Player.local.attachedObject);
     alt.Player.local.attachedObject = false;
 }
 ```
 
 ## keydown
 
-This is called when a player presses their keyboard key down.
+Se llama cuando un jugador presiona una tecla en su teclado.
 
-You can get [key codes by visiting this website](http://keycode.info/?ref=stuyk).
+Puedes encontrar[los códigos de tecla en esta web](http://keycode.info/?ref=stuyk).
 
-* keycode is the JavaScript key code identifier
+-   keycode es el identificador de la tecla en JavaScript
 
 ```js
 alt.on('keydown', handleEvent);
@@ -211,11 +209,11 @@ function handleEvent(keycode) {
 
 ## keyup
 
-This is called when a player lets go of a key.
+Se llama cuando un jugador deja de presionar una tecla.
 
-You can get [key codes by visiting this website](http://keycode.info/?ref=stuyk).
+Puedes encontrar[los códigos de tecla en esta web](http://keycode.info/?ref=stuyk).
 
-* keycode is the JavaScript key code identifier
+-   keycode es el identificador de la tecla en JavaScript
 
 ```js
 alt.on('keyup', handleEvent);
@@ -229,9 +227,9 @@ function handleEvent(keycode) {
 
 ## removeEntity
 
-This event is when a entity is destroyed; such as a player, vehicle, blip, and colshape.
+El evento sucede cuando una entidad es destruida, ocomo un jugador, vehículo, blip o colshape.
 
--   object is either `player, vehicle, blip, or colshape`.
+-   object es tanto `player, vehicle, blip, o colshape`.
 
 ```js
 alt.on('removeEntity', handleEvent);
@@ -257,9 +255,9 @@ function handleEvent(someObject) {
 
 ## resourceStart
 
-This is called when your resource is starting.
+Se llama cuando tu recurso está iniciándose.
 
--   errored lets us know if the resource failed to load.
+-   errored nos ayuda a saber si el recurso no ha cargado correctamente.
 
 ```js
 alt.on('resourceStart', handleEvent);
@@ -275,7 +273,7 @@ function handleEvent(errored) {
 
 ## resourceStop
 
-This is called when your resource has stopped. Its final breathe before it gives up on life.
+A esto se le llama cuando un recurso ha parado. Es su último aliento antes de morir.
 
 ```js
 alt.on('resourceStop', handleEvent);
@@ -287,16 +285,16 @@ function handleEvent() {
 
 ## syncedMetaChange
 
-This is called when a synced meta value changes for any player, vehicle, colshape, or blip.
+Se le llama cuando el valor synced meta ha cambiado para cualquier jugador, vehículo, colshape o blip.
 
-Keep in mind that **syncedMeta** can be **accessed from server and client side.**
+Ten en cuenta que a **syncedMeta** se puede **acceder desde el lado del cliente y del servidor.**
 
--   entity is a `player, vehicle, colshape, or blip`
--   key is an identifier that data is identified with. Think of it as a key in a map for JavaScript.
--   value is the value associated with the key.
--   oldValue is the value previous to the current value being passed.
+-   entity es un `player, vehicle, colshape, or blip`
+-   key es un identificador con el que la información se identifica. Piensa en ello como un key en map en términos de JavaScript.
+-   value es un valor asociado con esa key.
+-   oldValue es el valor anterior al valor que se está siendo pasado ahora.
 
-**Sever Side**
+**Lado del Servidor**
 
 ```js
 alt.on('playerConnect', player => {
@@ -304,39 +302,39 @@ alt.on('playerConnect', player => {
 });
 ```
 
-**Client Side**
+**Lado del Cliente**
 
 ```js
 alt.on('syncedMetaChange', handleEvent);
 
 function handleEvent(entity, key, value, oldValue) {
-    // Filter out non-player types.
+    // Filtrar tipos que no sean jugadores.
     if (typeof entity !== alt.Player) {
         return;
     }
 
-    // Compare the key if it's what we are looking for.
+    // Comparar la key para ver si es lo que estábamos buscando.
     if (key !== 'connected') {
         return;
     }
 
-    // We just made an overly complicated console.log for a player connected. Yay!
+    // Acabamos de diseñar un innecesariamente complejo console.log para cuando un jugador se conecta. ¡¡Olé!!
     alt.log(`You have joined the server.`);
 }
 ```
 
 ## streamSyncedMetaChange
 
-This is called when a synced meta value changes for any player, vehicle, colshape, or blip.
+Se le llama cuando el valor synced meta ha cambiado para cualquier jugador, vehículo, colshape o blip.
 
-Keep in mind that **streamSyncedMeta** can be **accessed from server and client side** by players who are within other's streaming range.
+Ten en cuenta que a **streamSyncedMeta** se puede **acceder desde el lado del cliente y del servidor** por jugadores que se encuentren en su rango de streaming.
 
--   entity is a `player, vehicle, colshape, or blip`
--   key is an identifier that data is identified with. Think of it as a key in a map for JavaScript.
--   value is the value associated with the key.
--   oldValue is the value previous to the current value being passed.
+-   entity es un `player, vehicle, colshape, or blip`
+-   key es un identificador con el que la información se identifica. Piensa en ello como un key en map en términos de JavaScript.
+-   value es un valor asociado con esa key.
+-   oldValue es el valor anterior al valor que se está siendo pasado ahora.
 
-**Server Side**
+**Lado del Servidor**
 
 ```js
 alt.on('playerConnect', player => {
@@ -344,29 +342,29 @@ alt.on('playerConnect', player => {
 });
 ```
 
-**Client Side**
+**Lado del Cliente**
 
 ```js
 alt.on('streamedSyncedMetaChange', handleEvent);
 
 function handleEvent(entity, key, value, oldValue) {
-    // Filter out non-player types.
-    if(!(entity instanceof alt.Player)) return;
-    
-    // Compare the key if it's what we are looking for.
+    // Filtrar tipos que no sean jugadores.
+    if (!(entity instanceof alt.Player)) return;
+
+    // Comparar la key para ver si es lo que estábamos buscando.
     if (key !== 'connected') {
         return;
     }
 
-    // We just made an overly complicated console.log for a player connected. Yay!
+    // Acabamos de diseñar un innecesariamente complejo console.log para cuando un jugador se conecta. ¡¡Olé!!
     console.log(`You have joined the server.`);
 }
 ```
 
 ## globalMetaChange
 
-We will skip this one until it is implemented. Currently **not implemented**.
+Saltaremos este evento hasta que se implemente. Actualmente **no implementado**.
 
 ## globalSyncedMetaChange
 
-We will skip this one until it is implemented. Currently **not implemented**.
+Saltaremos este evento hasta que se implemente. Actualmente **no implementado**.
